@@ -1,0 +1,9 @@
+﻿global using Microsoft.EntityFrameworkCore;
+global using ProgrammerTest.Order.WebApi.AutoMapper;
+global using ProgrammerTest.Order.WebApi.Common.Utils;
+global using ProgrammerTest.Order.WebApi.DbContexts;
+global using ProgrammerTest.Order.WebApi.Dtos;
+global using ProgrammerTest.Order.WebApi.Models;
+global using ProgrammerTest.Order.WebApi.Repository;
+global using ProgrammerTest.Order.WebApi.Services;
+global using System.Linq.Expressions;
