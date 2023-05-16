@@ -16,6 +16,10 @@ namespace ProgrammerTest.Order.WebApi.Controllers
             _mapper = mapper;
         }
 
+        public OrderController()
+        {
+        }
+
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

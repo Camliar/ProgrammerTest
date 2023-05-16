@@ -7,7 +7,7 @@ public class OrderContext : DbContext
 
     }
 
-    DbSet<OrderModel> Orders { get; set; }
+    public DbSet<OrderModel> Orders { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
