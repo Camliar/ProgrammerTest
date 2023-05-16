@@ -7,32 +7,38 @@ using System.Collections;
 
 namespace ProgrammerTest.Order.Test;
 
-[TestCaseOrderer("ProgrammerTest.Order.Test.PriorityOrderer", "XUnit.Coverlet.Collector")]
+[TestCaseOrderer("ProgrammerTest.Order.Test.PriorityOrderer", "ProgrammerTest.Order.Test")]
 public class RepositoryTest
 {
     private const string DBNAME = "testdb";
-    public static DbContextOptions<OrderContext> CreateDbContextOptions(string databaseName)
+    private static OrderContext _orderDbContext;
+
+    private static void CreateDbContext()
     {
+        if (_orderDbContext is not null)
+            return;
+
         var serviceProvider = new ServiceCollection().
             AddEntityFrameworkInMemoryDatabase()
             .BuildServiceProvider();
 
         var builder = new DbContextOptionsBuilder<OrderContext>();
-        builder.UseInMemoryDatabase(databaseName)
+        builder.UseInMemoryDatabase(DBNAME)
             .UseInternalServiceProvider(serviceProvider);
 
-        return builder.Options;
+        var options = builder.Options;
+        _orderDbContext = new OrderContext(options);
     }
 
 
-    [Theory, TestPriority(1)]
+    [Theory]
+    [TestPriority(0)]
     [ClassData(typeof(DataForTest))]
     public async void InsertTest(OrderModel model, bool isSuccess)
     {
-        var options = CreateDbContextOptions(DBNAME);
-        var context = new OrderContext(options);
+        CreateDbContext();
 
-        var reposotory = new Repository<OrderModel>(context);
+        var reposotory = new Repository<OrderModel>(_orderDbContext);
 
 
         var result = await reposotory.InsertAsync(model);
@@ -40,14 +46,15 @@ public class RepositoryTest
         Assert.Equal(isSuccess, result.Id > 0);
     }
 
-    [Theory, TestPriority(2)]
+
+    [Theory]
+    [TestPriority(1)]
     [InlineData(3)]
     public void GetListTest(int count)
     {
-        var options = CreateDbContextOptions(DBNAME);
-        var context = new OrderContext(options);
+        CreateDbContext();
 
-        var reposotory = new Repository<OrderModel>(context);
+        var reposotory = new Repository<OrderModel>(_orderDbContext);
 
 
         var result = reposotory.GetAll().ToList();
@@ -61,7 +68,6 @@ public class RepositoryTest
 
 public class DataForTest : IEnumerable<object[]>
 {
-    //这里是我们传递给Theory的数据
     private readonly List<object[]> _data = new List<object[]>
     {
         new object[] { new OrderModel() { BuyerName="周三" },true },
@@ -70,8 +76,12 @@ public class DataForTest : IEnumerable<object[]>
     };
 
     public IEnumerator<object[]> GetEnumerator()
-    { return _data.GetEnumerator(); }
+    { 
+        return _data.GetEnumerator(); 
+    }
 
     IEnumerator IEnumerable.GetEnumerator()
-    { return GetEnumerator(); }
+    { 
+        return GetEnumerator(); 
+    }
 }
