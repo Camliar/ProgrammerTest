@@ -35,9 +35,9 @@ namespace ProgrammerTest.Order.WebApi.Controllers
         public async Task<ActionResult<List<OrderDto>>> GetList([FromQuery] OrderCreateDto search)
         {
             var condition = ExpressionCreator.New<OrderModel>();
-            condition.AndIf(!string.IsNullOrWhiteSpace(search?.BuyerName), t => t.BuyerName.Contains(search.BuyerName));
-            condition.AndIf(!string.IsNullOrWhiteSpace(search?.PurchaseOrderNumber), t => t.PurchaseOrderId.Contains(search.PurchaseOrderNumber));
-            condition.AndIf(!string.IsNullOrWhiteSpace(search?.BillingZipCode), t => t.BillingZipCode.Contains(search.BillingZipCode));
+            condition = condition.AndIf(!string.IsNullOrWhiteSpace(search?.BuyerName), t => t.BuyerName.Contains(search.BuyerName));
+            condition = condition.AndIf(!string.IsNullOrWhiteSpace(search?.PurchaseOrderNumber), t => t.PurchaseOrderId.Contains(search.PurchaseOrderNumber));
+            condition = condition.AndIf(!string.IsNullOrWhiteSpace(search?.BillingZipCode), t => t.BillingZipCode.Contains(search.BillingZipCode));
 
             var orders = await _orderAppService.GetList(condition);
 
