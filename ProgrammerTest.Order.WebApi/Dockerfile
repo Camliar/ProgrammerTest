@@ -7,6 +7,9 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["ProgrammerTest.Order.WebApi/ProgrammerTest.Order.WebApi.csproj", "ProgrammerTest.Order.WebApi/"]
+
+RUN dotnet nuget remove source nuget.org
+RUN dotnet nuget add source https://mirrors.cloud.tencent.com/nuget/ -n tencent_nuget
 RUN dotnet restore "ProgrammerTest.Order.WebApi/ProgrammerTest.Order.WebApi.csproj"
 COPY . .
 WORKDIR "/src/ProgrammerTest.Order.WebApi"
