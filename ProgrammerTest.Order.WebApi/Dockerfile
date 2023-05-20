@@ -8,9 +8,7 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["ProgrammerTest.Order.WebApi/ProgrammerTest.Order.WebApi.csproj", "ProgrammerTest.Order.WebApi/"]
 
-RUN dotnet nuget remove source nuget.org
-RUN dotnet nuget add source https://mirrors.cloud.tencent.com/nuget/ -n tencent_nuget
-RUN dotnet restore "ProgrammerTest.Order.WebApi/ProgrammerTest.Order.WebApi.csproj"
+RUN dotnet restore "ProgrammerTest.Order.WebApi/ProgrammerTest.Order.WebApi.csproj"  --disable-parallel 
 COPY . .
 WORKDIR "/src/ProgrammerTest.Order.WebApi"
 RUN dotnet build "ProgrammerTest.Order.WebApi.csproj" -c Release -o /app/build
